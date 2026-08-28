@@ -112,14 +112,37 @@ publicados. Cada página de artículo incluye metadatos Open Graph.
 ## Despliegue
 
 Pensado para desplegarse en cualquier plataforma compatible con Next.js (Vercel, Railway, un
-VPS con `next start` detrás de un proxy). Pasos:
+VPS con `next start` detrás de un proxy). Ruta recomendada (todas con capa gratuita):
 
-1. Aprovisiona Postgres (Neon, Supabase, RDS…) y un bucket S3-compatible (S3, R2, MinIO).
-2. Configura las variables de entorno de `.env.example` en la plataforma de despliegue.
-3. `npm run prisma:deploy` para aplicar las migraciones en producción.
-4. `npm run db:seed` (opcional, solo si quieres los usuarios/categorías de ejemplo).
-5. Programa un cron diario contra `POST /api/cron/purge-trash`.
-6. Apunta tu dominio propio al despliegue.
+1. **Sube el repo a GitHub** (ya lo está) y crea cuenta en las plataformas siguientes.
+2. **Base de datos** — [Neon](https://neon.tech) o [Supabase](https://supabase.com): crea un
+   proyecto Postgres y copia la cadena de conexión a `DATABASE_URL`.
+3. **Storage de imágenes** — [Cloudflare R2](https://developers.cloudflare.com/r2/): crea un
+   bucket, un token de API (Access Key ID/Secret) y activa acceso público (o un dominio
+   personalizado) para obtener `S3_PUBLIC_BASE_URL`. Rellena `S3_BUCKET`, `S3_ENDPOINT`
+   (`https://<account_id>.r2.cloudflarestorage.com`), `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`.
+4. **Email** — [Resend](https://resend.com): verifica tu dominio (o usa su dominio de pruebas
+   para empezar) y copia la `RESEND_API_KEY`.
+5. **Hosting** — [Vercel](https://vercel.com): "Import Project" desde el repo de GitHub,
+   eligiendo la rama que quieras desplegar. Añade en *Settings → Environment Variables* todas
+   las variables de `.env.example` (`DATABASE_URL`, `NEXTAUTH_URL` con tu dominio final,
+   `NEXTAUTH_SECRET` generado con `openssl rand -base64 32`, las `S3_*`, `RESEND_API_KEY`,
+   `EMAIL_FROM`, `CRON_SECRET` generado igual que el anterior).
+6. **Aplica las migraciones contra la base de datos de producción** (una sola vez, y de nuevo
+   cada vez que cambie `schema.prisma`): con `DATABASE_URL` apuntando a Neon/Supabase en tu
+   `.env` local, ejecuta `npm run prisma:deploy`. Opcionalmente `npm run db:seed` si quieres
+   los usuarios/categorías de ejemplo también en producción.
+7. Lanza el deploy en Vercel. `vercel.json` ya incluye un cron diario a las 04:00 UTC contra
+   `/api/cron/purge-trash` — Vercel añade automáticamente la cabecera
+   `Authorization: Bearer $CRON_SECRET` a esa llamada en cuanto la variable `CRON_SECRET` está
+   configurada, así que no hay que hacer nada más para que la papelera se purgue sola.
+8. **Dominio propio** — en el proyecto de Vercel, *Settings → Domains*, añade tu dominio y
+   sigue las instrucciones DNS (normalmente un registro `A`/`CNAME`). Actualiza `NEXTAUTH_URL`
+   al dominio definitivo y vuelve a desplegar.
+
+En otra plataforma (Railway, Render, un VPS) el proceso es el mismo salvo el paso 7: monta tú
+mismo el cron (systemd timer, cron de Linux, GitHub Actions programado) contra
+`POST /api/cron/purge-trash` con la cabecera `Authorization: Bearer <CRON_SECRET>`.
 
 ## Simplificaciones conocidas
 
