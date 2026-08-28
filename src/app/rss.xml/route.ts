@@ -1,5 +1,8 @@
 import { prisma } from "@/lib/prisma";
 
+// Igual que el sitemap: se calcula por petición, no en build time.
+export const dynamic = "force-dynamic";
+
 function escapeXml(value: string) {
   return value
     .replace(/&/g, "&amp;")

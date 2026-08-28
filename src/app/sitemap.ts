@@ -1,6 +1,11 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 
+// Evita que Next intente generar el sitemap en build time (sin acceso a la
+// base de datos todavía en la mayoría de plataformas); se calcula al vuelo
+// en cada petición, igual que el resto de la app.
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
 
