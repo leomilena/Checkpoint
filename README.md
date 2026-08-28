@@ -111,38 +111,60 @@ publicados. Cada página de artículo incluye metadatos Open Graph.
 
 ## Despliegue
 
-Pensado para desplegarse en cualquier plataforma compatible con Next.js (Vercel, Railway, un
-VPS con `next start` detrás de un proxy). Ruta recomendada (todas con capa gratuita):
+### Opción sencilla: todo en Railway (una sola plataforma)
 
-1. **Sube el repo a GitHub** (ya lo está) y crea cuenta en las plataformas siguientes.
-2. **Base de datos** — [Neon](https://neon.tech) o [Supabase](https://supabase.com): crea un
+[Railway](https://railway.app) aloja la app **y** la base de datos **y** el storage de
+imágenes en el mismo proyecto, sin tener que dar de alta Neon/R2/Resend por separado:
+
+1. **New Project → Deploy from GitHub repo** y elige `leomilena/checkpoint` (rama
+   `claude/checkpoint-production-spec-f2twm7` o la que uses). Railway detecta Next.js solo.
+2. En el mismo proyecto: **New → Database → PostgreSQL**. Railway crea la base de datos y
+   expone su `DATABASE_URL`; en el servicio de la app, añade esa variable como referencia
+   (`${{Postgres.DATABASE_URL}}` en el selector de variables de Railway) en vez de copiarla a
+   mano.
+3. En el servicio de la app → **Variables**, añade solo estas tres:
+   - `NEXTAUTH_URL` → la URL que te da Railway (algo como `https://tuapp.up.railway.app`)
+   - `NEXTAUTH_SECRET` → genera una con `openssl rand -base64 32`
+   - `CRON_SECRET` → genera otra igual (opcional, solo si quieres la purga automática de la
+     papelera; si la omites, la app funciona igual)
+4. En el servicio de la app → **Volumes**, añade un volumen montado en `/app/public/uploads`.
+   Así las fotos que suban los redactores se guardan ahí de forma persistente entre despliegues,
+   **sin necesidad de contratar S3/R2** — el código ya cae automáticamente a ese almacenamiento
+   local cuando no hay variables `S3_*` configuradas.
+5. Railway lee `railway.json` (ya incluido en el repo) y arranca con
+   `npx prisma migrate deploy && npm run start`, es decir, aplica las migraciones solo y luego
+   levanta la app. No hay que ejecutar nada a mano.
+6. (Opcional, una vez) ejecuta `npm run db:seed` contra esa base de datos —por ejemplo con la
+   CLI de Railway: `railway run npm run db:seed`— si quieres los usuarios/categorías de ejemplo.
+
+Con eso ya tienes la web viva en la URL que te da Railway. El email transaccional (recuperación
+de contraseña, boletín) es opcional: sin `RESEND_API_KEY` configurada, el enlace se escribe en
+los logs del servicio en vez de enviarse por correo — puedes añadir Resend más adelante sin
+tocar nada más. Un dominio propio se añade después en el mismo servicio, en su pestaña
+**Settings → Networking → Custom Domain**.
+
+### Alternativa: Vercel + Neon + R2 + Resend (más piezas, más control)
+
+Útil si ya usas alguno de estos servicios o prefieres separar cada pieza:
+
+1. **Base de datos** — [Neon](https://neon.tech) o [Supabase](https://supabase.com): crea un
    proyecto Postgres y copia la cadena de conexión a `DATABASE_URL`.
-3. **Storage de imágenes** — [Cloudflare R2](https://developers.cloudflare.com/r2/): crea un
+2. **Storage de imágenes** — [Cloudflare R2](https://developers.cloudflare.com/r2/): crea un
    bucket, un token de API (Access Key ID/Secret) y activa acceso público (o un dominio
    personalizado) para obtener `S3_PUBLIC_BASE_URL`. Rellena `S3_BUCKET`, `S3_ENDPOINT`
    (`https://<account_id>.r2.cloudflarestorage.com`), `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`.
-4. **Email** — [Resend](https://resend.com): verifica tu dominio (o usa su dominio de pruebas
+3. **Email** — [Resend](https://resend.com): verifica tu dominio (o usa su dominio de pruebas
    para empezar) y copia la `RESEND_API_KEY`.
-5. **Hosting** — [Vercel](https://vercel.com): "Import Project" desde el repo de GitHub,
-   eligiendo la rama que quieras desplegar. Añade en *Settings → Environment Variables* todas
-   las variables de `.env.example` (`DATABASE_URL`, `NEXTAUTH_URL` con tu dominio final,
-   `NEXTAUTH_SECRET` generado con `openssl rand -base64 32`, las `S3_*`, `RESEND_API_KEY`,
-   `EMAIL_FROM`, `CRON_SECRET` generado igual que el anterior).
-6. **Aplica las migraciones contra la base de datos de producción** (una sola vez, y de nuevo
-   cada vez que cambie `schema.prisma`): con `DATABASE_URL` apuntando a Neon/Supabase en tu
-   `.env` local, ejecuta `npm run prisma:deploy`. Opcionalmente `npm run db:seed` si quieres
-   los usuarios/categorías de ejemplo también en producción.
-7. Lanza el deploy en Vercel. `vercel.json` ya incluye un cron diario a las 04:00 UTC contra
-   `/api/cron/purge-trash` — Vercel añade automáticamente la cabecera
-   `Authorization: Bearer $CRON_SECRET` a esa llamada en cuanto la variable `CRON_SECRET` está
-   configurada, así que no hay que hacer nada más para que la papelera se purgue sola.
-8. **Dominio propio** — en el proyecto de Vercel, *Settings → Domains*, añade tu dominio y
-   sigue las instrucciones DNS (normalmente un registro `A`/`CNAME`). Actualiza `NEXTAUTH_URL`
-   al dominio definitivo y vuelve a desplegar.
+4. **Hosting** — [Vercel](https://vercel.com): "Import Project" desde el repo de GitHub. Añade
+   en *Settings → Environment Variables* todas las variables de `.env.example`.
+5. Aplica las migraciones contra la base de producción una vez: con ese `DATABASE_URL` en tu
+   `.env` local, `npm run prisma:deploy` (y `npm run db:seed` si quieres los datos de ejemplo).
+6. Despliega. `vercel.json` ya incluye un cron diario contra `/api/cron/purge-trash`; Vercel
+   añade solo la cabecera `Authorization: Bearer $CRON_SECRET` en cuanto esa variable existe.
+7. Dominio propio en *Settings → Domains* del proyecto de Vercel.
 
-En otra plataforma (Railway, Render, un VPS) el proceso es el mismo salvo el paso 7: monta tú
-mismo el cron (systemd timer, cron de Linux, GitHub Actions programado) contra
-`POST /api/cron/purge-trash` con la cabecera `Authorization: Bearer <CRON_SECRET>`.
+En un VPS propio el proceso es el mismo pero montando tú el cron (systemd timer, cron de
+Linux…) contra `POST /api/cron/purge-trash` con la cabecera `Authorization: Bearer <CRON_SECRET>`.
 
 ## Simplificaciones conocidas
 
