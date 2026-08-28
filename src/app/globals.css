@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Dark mode (default) */
+  --cp-bg: #14151a;
+  --cp-surface: #1b1d24;
+  --cp-surface-2: #23252e;
+  --cp-border: #2c2e38;
+  --cp-text: #eceae3;
+  --cp-muted: #8b8d97;
+  --cp-accent: #ffb238;
+  --cp-accent-2: #3ddc97;
+  --cp-danger: #ff6b6b;
+}
+
+:root[data-theme="light"] {
+  --cp-bg: #f6f5f1;
+  --cp-surface: #ffffff;
+  --cp-surface-2: #ecebe3;
+  --cp-border: #dedcd3;
+  --cp-text: #181914;
+  --cp-muted: #6b6d66;
+  --cp-accent: #b5720a;
+  --cp-accent-2: #1e8e63;
+  --cp-danger: #d0392e;
+}
+
+* {
+  border-color: var(--cp-border);
+}
+
+html,
+body {
+  background: var(--cp-bg);
+  color: var(--cp-text);
+}
+
+body {
+  font-family: var(--font-inter), sans-serif;
+}
+
+::selection {
+  background: var(--cp-accent);
+  color: var(--cp-bg);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--cp-accent);
+  color: #14151a;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0 0 8px 0;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cp-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.prose-checkpoint {
+  color: var(--cp-text);
+  line-height: 1.75;
+  font-size: var(--cp-article-font-size, 1.0625rem);
+}
+
+.prose-checkpoint h2 {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-checkpoint blockquote {
+  border-left: 3px solid var(--cp-accent);
+  padding-left: 1rem;
+  color: var(--cp-muted);
+  font-style: italic;
+  margin: 1.25rem 0;
+}
+
+.prose-checkpoint img {
+  border-radius: 12px;
+  margin: 1.25rem 0;
+}
+
+.prose-checkpoint p {
+  margin-bottom: 1rem;
+}
+
+.prose-checkpoint strong {
+  color: var(--cp-text);
+  font-weight: 600;
+}
+
+.gradient-cover-0 {
+  background: linear-gradient(135deg, #2c2e38 0%, #1b1d24 100%);
+}
+.gradient-cover-1 {
+  background: linear-gradient(135deg, #3a2a1a 0%, #1b1d24 100%);
+}
+.gradient-cover-2 {
+  background: linear-gradient(135deg, #1a2e2a 0%, #1b1d24 100%);
+}
+.gradient-cover-3 {
+  background: linear-gradient(135deg, #2a1a3a 0%, #1b1d24 100%);
+}
+.gradient-cover-4 {
+  background: linear-gradient(135deg, #1a2434 0%, #1b1d24 100%);
+}
+.gradient-cover-5 {
+  background: linear-gradient(135deg, #341a24 0%, #1b1d24 100%);
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--cp-border);
+  border-radius: 999px;
+}
