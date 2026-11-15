@@ -11,7 +11,8 @@ type CommentItem = {
   body: string;
   createdAt: string;
   user: CommentUser;
-  replies: CommentItem[];
+  // Ausente en una respuesta (la API no incluye un segundo nivel de anidado).
+  replies?: CommentItem[];
 };
 
 function formatDateTime(date: string) {
@@ -113,19 +114,20 @@ function CommentRow({
             </form>
           )}
 
-          {comment.replies.map((reply) => (
-            <CommentRow
-              key={reply.id}
-              comment={reply}
-              articleId={articleId}
-              locked={locked}
-              canModerate={canModerate}
-              onReply={onReply}
-              onReported={onReported}
-              onDeleted={onDeleted}
-              isReply
-            />
-          ))}
+          {!isReply &&
+            comment.replies?.map((reply) => (
+              <CommentRow
+                key={reply.id}
+                comment={reply}
+                articleId={articleId}
+                locked={locked}
+                canModerate={canModerate}
+                onReply={onReply}
+                onReported={onReported}
+                onDeleted={onDeleted}
+                isReply
+              />
+            ))}
         </div>
       </div>
     </div>
@@ -195,11 +197,11 @@ export function CommentsSection({
     setComments((prev) =>
       prev
         .filter((c) => c.id !== id)
-        .map((c) => ({ ...c, replies: c.replies.filter((r) => r.id !== id) }))
+        .map((c) => ({ ...c, replies: c.replies?.filter((r) => r.id !== id) ?? [] }))
     );
   }
 
-  const totalCount = comments.reduce((acc, c) => acc + 1 + c.replies.length, 0);
+  const totalCount = comments.reduce((acc, c) => acc + 1 + (c.replies?.length ?? 0), 0);
 
   return (
     <section aria-label="Comentarios" className="mt-10">
