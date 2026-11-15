@@ -33,7 +33,13 @@ export async function POST(req: Request) {
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  const url = await uploadImage(buffer, file.name, kind);
 
-  return NextResponse.json({ url });
+  try {
+    const url = await uploadImage(buffer, file.name, kind);
+    return NextResponse.json({ url });
+  } catch (error) {
+    console.error("Error al subir imagen:", error);
+    const message = error instanceof Error ? error.message : "Error desconocido al subir la imagen";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }

@@ -22,6 +22,10 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: "10mb",
     },
+    // `sharp` incluye binarios nativos; si Next intenta empaquetarlo igual
+    // que el resto del código, falla en el runtime serverless de Vercel.
+    // Esto le dice que lo deje como un require() normal de Node.
+    serverComponentsExternalPackages: ["sharp"],
   },
 };
 

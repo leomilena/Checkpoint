@@ -7,8 +7,8 @@ async function uploadFile(file: File, kind: "inline"): Promise<string> {
   formData.append("file", file);
   formData.append("kind", kind);
   const res = await fetch("/api/upload", { method: "POST", body: formData });
-  if (!res.ok) throw new Error("No se ha podido subir la imagen");
-  const data = await res.json();
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error ?? "No se ha podido subir la imagen");
   return data.url as string;
 }
 
@@ -63,8 +63,8 @@ export function RichTextarea({ value, onChange }: { value: string; onChange: (ne
     try {
       const url = await uploadFile(file, "inline");
       insertAtCursor(`![${file.name.replace(/\.[a-z0-9]+$/i, "")}](${url})`);
-    } catch {
-      alert("No se ha podido subir la imagen.");
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "No se ha podido subir la imagen.");
     } finally {
       setUploading(false);
     }

@@ -25,11 +25,11 @@ export function CoverUploader({
       formData.append("file", file);
       formData.append("kind", "cover");
       const res = await fetch("/api/upload", { method: "POST", body: formData });
-      if (!res.ok) throw new Error();
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? "No se ha podido subir la portada.");
       onChange({ coverImageUrl: data.url, coverGradient });
-    } catch {
-      alert("No se ha podido subir la portada.");
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "No se ha podido subir la portada.");
     } finally {
       setUploading(false);
     }

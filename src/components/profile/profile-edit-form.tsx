@@ -35,9 +35,11 @@ export function ProfileEditForm({
     formData.append("file", file);
     formData.append("kind", "avatar");
     const res = await fetch("/api/upload", { method: "POST", body: formData });
+    const data = await res.json().catch(() => ({}));
     if (res.ok) {
-      const data = await res.json();
       setAvatarImageUrl(data.url);
+    } else {
+      alert(data.error ?? "No se ha podido subir la foto.");
     }
   }
 
