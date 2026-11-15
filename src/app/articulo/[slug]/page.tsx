@@ -172,7 +172,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         </div>
       )}
 
-      <div className="prose-checkpoint">{renderArticleBody(article.body)}</div>
+      <div className="prose-frame">{renderArticleBody(article.body)}</div>
 
       <div className="mt-8 border-t border-border pt-6">
         <LikeFavoriteBar
@@ -201,7 +201,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
       {mostRead.length > 0 && (
         <section className="mt-14">
-          <h2 className="mb-4 font-display text-xl font-bold text-text">Más leídos de Checkpoint</h2>
+          <h2 className="mb-4 font-display text-xl font-bold text-text">Más leídos de The Frame</h2>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             {mostRead.map((r) => (
               <ArticleCard key={r.id} article={r} />

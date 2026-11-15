@@ -17,7 +17,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-border px-4 py-4 text-center font-mono text-xs text-muted">
-        © {new Date().getFullYear()} Checkpoint
+        © {new Date().getFullYear()} The Frame
       </div>
     </footer>
   );

@@ -1,4 +1,4 @@
-# Checkpoint
+# The Frame
 
 Medio digital de videojuegos, cine y frikada. Aplicación de producción construida sobre
 Next.js (App Router) + PostgreSQL, que reemplaza el prototipo original (React + estado en
@@ -31,10 +31,10 @@ npm run db:seed        # crea Marc (admin) y Laia Ferrer (redactora) + categorí
 npm run dev
 ```
 
-Abre http://localhost:3000. Usuarios de ejemplo (contraseña `checkpoint123` para ambos):
+Abre http://localhost:3000. Usuarios de ejemplo (contraseña `theframe123` para ambos):
 
-- **Admin** — `marc@checkpoint.dev`
-- **Redactora** — `laia@checkpoint.dev`
+- **Admin** — `marc@theframe.dev`
+- **Redactora** — `laia@theframe.dev`
 
 ### Variables de entorno
 

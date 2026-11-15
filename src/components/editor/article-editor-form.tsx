@@ -218,7 +218,7 @@ export function ArticleEditorForm({
 
         <div className="mt-2">
           {preview ? (
-            <div className="prose-checkpoint rounded-card border border-border bg-surface p-5">
+            <div className="prose-frame rounded-card border border-border bg-surface p-5">
               <h1 className="font-display text-2xl font-bold text-text">{title || "Sin título"}</h1>
               {subtitle && <p className="mt-1 text-muted">{subtitle}</p>}
               <div className="mt-4">{renderArticleBody(body)}</div>

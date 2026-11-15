@@ -1,8 +1,8 @@
 {
-  "name": "checkpoint",
+  "name": "the-frame",
   "version": "1.0.0",
   "private": true,
-  "description": "Checkpoint — medio digital de videojuegos, cine y frikada.",
+  "description": "The Frame — medio digital de videojuegos, cine y frikada.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

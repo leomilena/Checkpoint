@@ -55,7 +55,7 @@ export function RatingWidget({
       <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-sm">
         {writerRating != null && (
           <span className="flex items-center gap-2">
-            <span className="text-muted">Nota Checkpoint:</span>
+            <span className="text-muted">Nota The Frame:</span>
             <StarRatingDisplay value={writerRating} size="md" />
             <span className="font-semibold text-text">{writerRating.toFixed(1)}</span>
           </span>

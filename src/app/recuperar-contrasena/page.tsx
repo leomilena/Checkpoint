@@ -27,7 +27,7 @@ export default function ForgotPasswordPage() {
 
       {status === "done" ? (
         <p className="rounded-card border border-border bg-surface p-6 text-sm text-text">
-          Si el email existe en Checkpoint, recibirás un enlace de recuperación en breve.
+          Si el email existe en The Frame, recibirás un enlace de recuperación en breve.
         </p>
       ) : (
         <form onSubmit={onSubmit} className="flex flex-col gap-4 rounded-card border border-border bg-surface p-6">

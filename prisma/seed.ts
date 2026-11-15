@@ -25,27 +25,27 @@ async function main() {
     )
   );
 
-  const passwordHash = await bcrypt.hash("checkpoint123", 12);
+  const passwordHash = await bcrypt.hash("theframe123", 12);
 
   const marc = await prisma.user.upsert({
-    where: { email: "marc@checkpoint.dev" },
+    where: { email: "marc@theframe.dev" },
     update: {},
     create: {
       name: "Marc",
-      email: "marc@checkpoint.dev",
+      email: "marc@theframe.dev",
       passwordHash,
       role: "ADMIN",
       avatarColor: "#FFB238",
-      bio: "Fundador y administrador de Checkpoint.",
+      bio: "Fundador y administrador de The Frame.",
     },
   });
 
   const laia = await prisma.user.upsert({
-    where: { email: "laia@checkpoint.dev" },
+    where: { email: "laia@theframe.dev" },
     update: {},
     create: {
       name: "Laia Ferrer",
-      email: "laia@checkpoint.dev",
+      email: "laia@theframe.dev",
       passwordHash,
       role: "WRITER",
       avatarColor: "#3DDC97",
@@ -62,11 +62,11 @@ async function main() {
   if (existing === 0) {
     await prisma.article.create({
       data: {
-        title: "Bienvenidos a Checkpoint",
-        subtitle: "Un nuevo punto de guardado para la cultura friki",
-        slug: "bienvenidos-a-checkpoint",
+        title: "Bienvenidos a The Frame",
+        subtitle: "Un nuevo encuadre para la cultura friki",
+        slug: "bienvenidos-a-the-frame",
         body:
-          "## Empieza la partida\n\nCheckpoint nace como un espacio para hablar de videojuegos, cine y todo lo frikada que hay entremedias.\n\n> Guarda la partida, sigue jugando.",
+          "## Luz, cámara… ¡dale al play!\n\nThe Frame nace como un espacio para hablar de videojuegos, cine y todo lo frikada que hay entremedias.\n\n> Cada fotograma cuenta una historia.",
         topicId: videojuegos.id,
         categoryId: noticia.id,
         status: "PUBLISHED",
@@ -95,8 +95,8 @@ async function main() {
   }
 
   console.log("Seed completo:");
-  console.log(`  Admin: marc@checkpoint.dev / checkpoint123`);
-  console.log(`  Redactora: laia@checkpoint.dev / checkpoint123`);
+  console.log(`  Admin: marc@theframe.dev / theframe123`);
+  console.log(`  Redactora: laia@theframe.dev / theframe123`);
 }
 
 main()

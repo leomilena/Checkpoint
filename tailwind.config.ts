@@ -28,13 +28,13 @@ const config: Config = {
         DEFAULT: "200ms",
       },
       keyframes: {
-        "pulse-checkpoint": {
-          "0%, 100%": { transform: "scale(1)", opacity: "1" },
-          "50%": { transform: "scale(1.35)", opacity: "0.55" },
+        "frame-pulse": {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.6", transform: "scale(0.92)" },
         },
       },
       animation: {
-        checkpoint: "pulse-checkpoint 1.8s ease-in-out infinite",
+        "frame-pulse": "frame-pulse 2.2s ease-in-out infinite",
       },
     },
   },

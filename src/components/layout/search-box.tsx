@@ -80,7 +80,7 @@ export function SearchBox() {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => results.length && setOpen(true)}
           placeholder="Buscar artículos, autores…"
-          aria-label="Buscar en Checkpoint"
+          aria-label="Buscar en The Frame"
           className="w-40 bg-transparent text-sm text-text placeholder:text-muted focus:outline-none sm:w-56"
         />
       </form>

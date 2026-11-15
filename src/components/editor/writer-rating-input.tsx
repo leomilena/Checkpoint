@@ -14,7 +14,7 @@ export function WriterRatingInput({
   return (
     <div className="flex flex-col gap-1.5">
       <label htmlFor="writer-rating" className="text-sm font-medium text-text">
-        Nota Checkpoint — {verb}
+        Nota The Frame — {verb}
       </label>
       <select
         id="writer-rating"

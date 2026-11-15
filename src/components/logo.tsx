@@ -5,13 +5,22 @@ export function Logo({ className = "" }: { className?: string }) {
     <Link
       href="/"
       className={`flex items-center gap-2 font-display font-bold tracking-tight text-text ${className}`}
-      aria-label="Checkpoint — ir a portada"
+      aria-label="The Frame — ir a portada"
     >
-      <span className="relative flex h-3 w-3">
-        <span className="absolute inline-flex h-full w-full animate-checkpoint rounded-full bg-accent" />
-        <span className="relative inline-flex h-3 w-3 rounded-full bg-accent" />
-      </span>
-      <span className="text-lg uppercase">Checkpoint</span>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        className="animate-frame-pulse"
+      >
+        <path d="M4 9V5a1 1 0 0 1 1-1h4" stroke="var(--cp-accent)" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M20 9V5a1 1 0 0 0-1-1h-4" stroke="var(--cp-accent)" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M4 15v4a1 1 0 0 0 1 1h4" stroke="var(--cp-accent)" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M20 15v4a1 1 0 0 1-1 1h-4" stroke="var(--cp-accent)" strokeWidth="2.2" strokeLinecap="round" />
+      </svg>
+      <span className="text-lg uppercase">The Frame</span>
     </Link>
   );
 }

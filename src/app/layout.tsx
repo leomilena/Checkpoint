@@ -36,11 +36,11 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXTAUTH_URL ?? "http://localhost:3000"),
   title: {
-    default: "Checkpoint — videojuegos, cine y frikada",
-    template: "%s · Checkpoint",
+    default: "The Frame — videojuegos, cine y frikada",
+    template: "%s · The Frame",
   },
   description:
-    "Checkpoint es un medio digital de videojuegos, cine y frikada: noticias, análisis, guías y opinión.",
+    "The Frame es un medio digital de videojuegos, cine y frikada: noticias, análisis, guías y opinión.",
   alternates: {
     types: { "application/rss+xml": "/rss.xml" },
   },
