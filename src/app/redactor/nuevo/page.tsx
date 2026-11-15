@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { ArticleEditorForm } from "@/components/editor/article-editor-form";
+import { PdfImportButton } from "@/components/editor/pdf-import-button";
 
 export const metadata: Metadata = { title: "Nuevo artículo" };
 
@@ -23,7 +24,10 @@ export default async function NewArticlePage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <h1 className="mb-6 font-display text-2xl font-bold text-text">Nuevo artículo</h1>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="font-display text-2xl font-bold text-text">Nuevo artículo</h1>
+        <PdfImportButton />
+      </div>
       <ArticleEditorForm
         topics={topics}
         categories={categories}

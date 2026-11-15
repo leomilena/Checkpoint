@@ -92,6 +92,15 @@ vez al día.
 El editor de artículos guarda un borrador automáticamente cada ~8 segundos si hay cambios sin
 guardar (`ArticleEditorForm`), sin bloquear la escritura, y muestra "Autoguardado hace Xs".
 
+### Importar artículo desde PDF
+
+Desde "Nuevo artículo", el botón "Importar desde PDF" sube un PDF y crea automáticamente un
+borrador con el texto extraído como título y cuerpo (`POST /api/articles/import-pdf`), usando
+`unpdf` (sin dependencias nativas, pensado para funciones serverless) para la extracción. Es una
+aproximación razonable, no perfecta: solo lee el texto embebido (no hace OCR sobre PDFs
+escaneados) y reconstruye párrafos con una heurística simple, así que normalmente hace falta
+repasar el formato en el editor después de importar.
+
 ## SEO
 
 `sitemap.xml`, `robots.txt` y `rss.xml` se generan dinámicamente a partir de los artículos
