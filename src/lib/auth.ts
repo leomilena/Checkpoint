@@ -59,10 +59,29 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).id = token.id;
-        (session.user as any).role = token.role;
-        (session.user as any).avatarColor = token.avatarColor;
-        (session.user as any).avatarImageUrl = token.avatarImageUrl;
-        (session.user as any).themePreference = token.themePreference;
+        // El rol (y el resto de campos mutables) se lee siempre fresco de la
+        // base de datos en vez de confiar en el valor cacheado en el JWT:
+        // si no, un cambio de rol/ban hecho por un admin no se nota hasta
+        // que esa persona cierra sesión y vuelve a entrar, lo cual no es
+        // nada evidente para quien administra la web.
+        const current = token.id
+          ? await prisma.user.findUnique({
+              where: { id: token.id as string },
+              select: { role: true, avatarColor: true, avatarImageUrl: true, themePreference: true },
+            })
+          : null;
+
+        if (current) {
+          (session.user as any).role = current.role;
+          (session.user as any).avatarColor = current.avatarColor;
+          (session.user as any).avatarImageUrl = current.avatarImageUrl;
+          (session.user as any).themePreference = current.themePreference;
+        } else {
+          (session.user as any).role = token.role;
+          (session.user as any).avatarColor = token.avatarColor;
+          (session.user as any).avatarImageUrl = token.avatarImageUrl;
+          (session.user as any).themePreference = token.themePreference;
+        }
       }
       return session;
     },
