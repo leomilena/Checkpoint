@@ -62,7 +62,8 @@ export function RichTextarea({ value, onChange }: { value: string; onChange: (ne
     setUploading(true);
     try {
       const url = await uploadFile(file, "inline");
-      insertAtCursor(`![${file.name.replace(/\.[a-z0-9]+$/i, "")}](${url})`);
+      const caption = window.prompt("Pie de foto (opcional, se mostrará debajo de la imagen):", "")?.trim() ?? "";
+      insertAtCursor(`![${caption}](${url})`);
     } catch (error) {
       alert(error instanceof Error ? error.message : "No se ha podido subir la imagen.");
     } finally {

@@ -272,7 +272,10 @@ export async function extractArticleFromPdf(
           .png()
           .toBuffer();
         const url = await uploadImage(png, `pdf-pagina-${pageNumber}.png`, "inline");
-        bodyBlocks.push(`![Imagen importada del PDF](${url})`);
+        // Sin texto entre corchetes: ahora se muestra como pie de foto
+        // visible, así que mejor vacío que un texto genérico — el
+        // redactor le pone el suyo en el editor si quiere uno.
+        bodyBlocks.push(`![](${url})`);
       } catch (imageError) {
         console.error(`No se ha podido procesar una imagen de la página ${pageNumber} del PDF:`, imageError);
       }

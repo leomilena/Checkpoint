@@ -65,10 +65,16 @@ export function renderArticleBody(body: string): React.ReactNode {
     } else if (imageMatch) {
       flushParagraph(key);
       flushQuote(key);
+      const caption = imageMatch[1].trim();
       blocks.push(
-        <span key={key} className="relative block h-80 w-full overflow-hidden rounded-card">
-          <Image src={imageMatch[2]} alt={imageMatch[1]} fill className="object-cover" sizes="700px" />
-        </span>
+        <figure key={key} className="my-5">
+          <span className="relative block h-80 w-full overflow-hidden rounded-card">
+            <Image src={imageMatch[2]} alt={caption} fill className="object-cover" sizes="700px" />
+          </span>
+          {caption && (
+            <figcaption className="mt-1.5 text-center text-xs text-muted">{caption}</figcaption>
+          )}
+        </figure>
       );
     } else if (line === "") {
       flushParagraph(key);
