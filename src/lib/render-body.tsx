@@ -1,6 +1,21 @@
 import Image from "next/image";
 import React from "react";
 
+const YOUTUBE_ID_PATTERNS = [
+  /youtu\.be\/([a-zA-Z0-9_-]{11})/,
+  /youtube\.com\/watch\?(?:.*&)?v=([a-zA-Z0-9_-]{11})/,
+  /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+  /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+];
+
+export function extractYouTubeId(url: string): string | null {
+  for (const pattern of YOUTUBE_ID_PATTERNS) {
+    const match = pattern.exec(url);
+    if (match) return match[1];
+  }
+  return null;
+}
+
 function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
   const nodes: React.ReactNode[] = [];
   const regex = /(\*\*(.+?)\*\*|\*(.+?)\*)/g;
@@ -54,6 +69,8 @@ export function renderArticleBody(body: string): React.ReactNode {
     const key = `block-${idx}`;
 
     const imageMatch = /^!\[([^\]]*)\]\((\S+)\)$/.exec(line);
+    const youtubeMatch = /^\[youtube\]\((\S+)\)$/.exec(line);
+    const youtubeId = youtubeMatch ? extractYouTubeId(youtubeMatch[1]) : null;
 
     if (line.startsWith("## ")) {
       flushParagraph(key);
@@ -75,6 +92,21 @@ export function renderArticleBody(body: string): React.ReactNode {
             <figcaption className="mt-1.5 text-center text-xs text-muted">{caption}</figcaption>
           )}
         </figure>
+      );
+    } else if (youtubeId) {
+      flushParagraph(key);
+      flushQuote(key);
+      blocks.push(
+        <div key={key} className="relative my-5 aspect-video w-full overflow-hidden rounded-card">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${youtubeId}`}
+            title="Vídeo de YouTube incrustado"
+            className="absolute inset-0 h-full w-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            loading="lazy"
+          />
+        </div>
       );
     } else if (line === "") {
       flushParagraph(key);

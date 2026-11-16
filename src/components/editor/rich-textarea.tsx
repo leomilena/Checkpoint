@@ -55,6 +55,12 @@ export function RichTextarea({ value, onChange }: { value: string; onChange: (ne
     onChange(next);
   }
 
+  function onInsertYouTube() {
+    const url = window.prompt("Pega el enlace del vídeo de YouTube:", "")?.trim();
+    if (!url) return;
+    insertAtCursor(`[youtube](${url})`);
+  }
+
   async function onPickImage(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     e.target.value = "";
@@ -112,6 +118,15 @@ export function RichTextarea({ value, onChange }: { value: string; onChange: (ne
           {uploading ? "…" : "🖼"}
         </button>
         <input ref={fileInputRef} type="file" accept="image/*" onChange={onPickImage} className="hidden" />
+        <button
+          type="button"
+          aria-label="Insertar vídeo de YouTube"
+          title="Insertar vídeo de YouTube"
+          onClick={onInsertYouTube}
+          className={buttonClass}
+        >
+          ▶
+        </button>
       </div>
       <textarea
         ref={ref}
