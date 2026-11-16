@@ -5,7 +5,7 @@
   "description": "The Frame — medio digital de videojuegos, cine y frikada.",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma migrate deploy && next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
