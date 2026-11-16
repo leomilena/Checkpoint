@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { NewsletterForm } from "@/components/layout/newsletter-form";
 
@@ -28,7 +29,10 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-border px-4 py-4 text-center font-mono text-xs text-muted">
-        © {new Date().getFullYear()} The Frame
+        <Link href="/colabora" className="text-accent hover:underline">
+          ¿Quieres escribir con nosotros?
+        </Link>
+        <span className="mx-2">·</span>© {new Date().getFullYear()} The Frame
       </div>
     </footer>
   );

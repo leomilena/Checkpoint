@@ -47,3 +47,11 @@ export const ratingSchema = z.object({
 export const newsletterSchema = z.object({
   email: z.string().email(),
 });
+
+export const writerApplicationSchema = z.object({
+  name: z.string().min(1).max(100),
+  email: z.string().email(),
+  message: z.string().min(1).max(2000),
+  // Campo trampa para bots: un formulario normal lo deja vacío.
+  website: z.string().max(0).optional(),
+});

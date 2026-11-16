@@ -12,6 +12,7 @@ const TABS = [
   { href: "/admin/usuarios", label: "Usuarios" },
   { href: "/admin/categorias", label: "Categorías" },
   { href: "/admin/boletin", label: "Boletín" },
+  { href: "/admin/redactores", label: "Solicitudes" },
 ];
 
 export function AdminNav() {
