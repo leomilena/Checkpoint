@@ -29,6 +29,10 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-border px-4 py-4 text-center font-mono text-xs text-muted">
+        <Link href="/equipo" className="text-accent hover:underline">
+          Nuestro equipo
+        </Link>
+        <span className="mx-2">·</span>
         <Link href="/colabora" className="text-accent hover:underline">
           ¿Quieres escribir con nosotros?
         </Link>
