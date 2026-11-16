@@ -11,17 +11,30 @@ export function Footer() {
           <p className="mt-2 max-w-sm text-sm text-muted">
             Videojuegos, cine y frikada. Guarda la partida, sigue leyendo.
           </p>
-          <a
-            href="https://www.tiktok.com/@theframe_press"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="The Frame en TikTok"
-            className="mt-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition hover:border-accent hover:text-accent"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M16.6 5.82a4.28 4.28 0 0 1-3.22-1.45V14.4a4.9 4.9 0 1 1-4.9-4.9c.17 0 .33.01.49.03v2.47a2.44 2.44 0 1 0 1.71 2.33V2h2.5a4.27 4.27 0 0 0 3.42 4.19v1.63Z" />
-            </svg>
-          </a>
+          <div className="mt-3 flex items-center gap-2">
+            <a
+              href="https://www.tiktok.com/@theframe_press"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="The Frame en TikTok"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition hover:border-accent hover:text-accent"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M16.6 5.82a4.28 4.28 0 0 1-3.22-1.45V14.4a4.9 4.9 0 1 1-4.9-4.9c.17 0 .33.01.49.03v2.47a2.44 2.44 0 1 0 1.71 2.33V2h2.5a4.27 4.27 0 0 0 3.42 4.19v1.63Z" />
+              </svg>
+            </a>
+            <a
+              href="https://x.com/theframe__news"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="The Frame en X"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition hover:border-accent hover:text-accent"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M18.24 2.25h3.3l-7.2 8.23 8.47 11.27h-6.63l-5.2-6.8-5.94 6.8H1.74l7.7-8.8L1.3 2.25h6.8l4.7 6.22ZM17.04 19.7h1.83L6.98 4.2H5.02Z" />
+              </svg>
+            </a>
+          </div>
         </div>
         <div>
           <p className="mb-2 text-sm font-semibold text-text">Suscríbete al boletín</p>
