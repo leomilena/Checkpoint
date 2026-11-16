@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ArticleCard } from "@/components/article-card";
+import { FeaturedArticleCard } from "@/components/featured-article-card";
 import type { ArticleCard as ArticleCardType } from "@/lib/article-select";
 import type { SortKey } from "@/lib/article-query";
 
@@ -70,10 +71,26 @@ export function ArticleGrid({
       {articles.length === 0 ? (
         <p className="py-16 text-center text-muted">No hay artículos todavía.</p>
       ) : (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
+        <div className="flex flex-col gap-5">
+          {articles.length > 0 && (
+            <FeaturedArticleCard article={articles[0]} />
+          )}
+
+          {articles.length > 1 && (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              {articles.slice(1, 5).map((article) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+          )}
+
+          {articles.length > 5 && (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {articles.slice(5).map((article) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+          )}
         </div>
       )}
 
