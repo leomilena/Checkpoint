@@ -45,6 +45,7 @@ enum NotificationType {
   NEW_COMMENT
   ARTICLE_RETURNED
   ARTICLE_APPROVED
+  NEW_ARTICLE
 }
 
 model User {

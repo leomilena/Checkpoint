@@ -43,5 +43,20 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
     });
   }
 
+  const readers = await prisma.user.findMany({
+    where: { id: { not: article.authorId }, banned: false },
+    select: { id: true },
+  });
+  if (readers.length > 0) {
+    await prisma.notification.createMany({
+      data: readers.map((reader) => ({
+        userId: reader.id,
+        type: "NEW_ARTICLE" as const,
+        articleId: article.id,
+        message: `Nuevo artículo: "${article.title}"`,
+      })),
+    });
+  }
+
   return NextResponse.json({ article: updated });
 }
