@@ -12,10 +12,25 @@ async function uploadFile(file: File, kind: "inline"): Promise<string> {
   return data.url as string;
 }
 
+type PendingPrompt = { kind: "youtube" | "x" } | { kind: "caption"; url: string } | null;
+
 export function RichTextarea({ value, onChange }: { value: string; onChange: (next: string) => void }) {
   const ref = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [pendingPrompt, setPendingPrompt] = useState<PendingPrompt>(null);
+  const [promptValue, setPromptValue] = useState("");
+
+  function insertAtCursor(text: string) {
+    const textarea = ref.current;
+    if (!textarea) {
+      onChange(`${value}\n\n${text}\n\n`);
+      return;
+    }
+    const { selectionStart, selectionEnd } = textarea;
+    const next = `${value.slice(0, selectionStart)}\n\n${text}\n\n${value.slice(selectionEnd)}`;
+    onChange(next);
+  }
 
   function wrapSelection(prefix: string, suffix: string = prefix) {
     const textarea = ref.current;
@@ -44,27 +59,23 @@ export function RichTextarea({ value, onChange }: { value: string; onChange: (ne
     });
   }
 
-  function insertAtCursor(text: string) {
-    const textarea = ref.current;
-    if (!textarea) {
-      onChange(`${value}\n\n${text}\n\n`);
-      return;
+  function closePrompt() {
+    setPendingPrompt(null);
+    setPromptValue("");
+  }
+
+  function confirmPrompt() {
+    if (!pendingPrompt) return;
+    const trimmed = promptValue.trim();
+
+    if (pendingPrompt.kind === "youtube") {
+      if (trimmed) insertAtCursor(`[youtube](${trimmed})`);
+    } else if (pendingPrompt.kind === "x") {
+      if (trimmed) insertAtCursor(`[x](${trimmed})`);
+    } else if (pendingPrompt.kind === "caption") {
+      insertAtCursor(`![${trimmed}](${pendingPrompt.url})`);
     }
-    const { selectionStart, selectionEnd } = textarea;
-    const next = `${value.slice(0, selectionStart)}\n\n${text}\n\n${value.slice(selectionEnd)}`;
-    onChange(next);
-  }
-
-  function onInsertYouTube() {
-    const url = window.prompt("Pega el enlace del vídeo de YouTube:", "")?.trim();
-    if (!url) return;
-    insertAtCursor(`[youtube](${url})`);
-  }
-
-  function onInsertTweet() {
-    const url = window.prompt("Pega el enlace de la publicación de X:", "")?.trim();
-    if (!url) return;
-    insertAtCursor(`[x](${url})`);
+    closePrompt();
   }
 
   async function onPickImage(e: React.ChangeEvent<HTMLInputElement>) {
@@ -74,8 +85,8 @@ export function RichTextarea({ value, onChange }: { value: string; onChange: (ne
     setUploading(true);
     try {
       const url = await uploadFile(file, "inline");
-      const caption = window.prompt("Pie de foto (opcional, se mostrará debajo de la imagen):", "")?.trim() ?? "";
-      insertAtCursor(`![${caption}](${url})`);
+      setPromptValue("");
+      setPendingPrompt({ kind: "caption", url });
     } catch (error) {
       alert(error instanceof Error ? error.message : "No se ha podido subir la imagen.");
     } finally {
@@ -85,6 +96,12 @@ export function RichTextarea({ value, onChange }: { value: string; onChange: (ne
 
   const buttonClass =
     "flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface2 text-sm font-semibold text-text transition hover:border-accent hover:text-accent";
+
+  const PROMPT_LABELS: Record<NonNullable<PendingPrompt>["kind"], string> = {
+    youtube: "Pega el enlace del vídeo de YouTube",
+    x: "Pega el enlace de la publicación de X",
+    caption: "Pie de foto (opcional, se mostrará debajo de la imagen)",
+  };
 
   return (
     <div>
@@ -128,7 +145,10 @@ export function RichTextarea({ value, onChange }: { value: string; onChange: (ne
           type="button"
           aria-label="Insertar vídeo de YouTube"
           title="Insertar vídeo de YouTube"
-          onClick={onInsertYouTube}
+          onClick={() => {
+            setPromptValue("");
+            setPendingPrompt({ kind: "youtube" });
+          }}
           className={buttonClass}
         >
           ▶
@@ -137,12 +157,55 @@ export function RichTextarea({ value, onChange }: { value: string; onChange: (ne
           type="button"
           aria-label="Insertar publicación de X"
           title="Insertar publicación de X"
-          onClick={onInsertTweet}
+          onClick={() => {
+            setPromptValue("");
+            setPendingPrompt({ kind: "x" });
+          }}
           className={buttonClass}
         >
           𝕏
         </button>
       </div>
+
+      {pendingPrompt && (
+        <div className="mb-2 flex flex-col gap-2 rounded-lg border border-accent bg-surface2 p-3 sm:flex-row sm:items-center">
+          <label className="flex-1 text-xs text-muted">
+            {PROMPT_LABELS[pendingPrompt.kind]}
+            <input
+              autoFocus
+              type="text"
+              value={promptValue}
+              onChange={(e) => setPromptValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  confirmPrompt();
+                } else if (e.key === "Escape") {
+                  closePrompt();
+                }
+              }}
+              className="mt-1 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text focus:outline-none focus:border-accent"
+            />
+          </label>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={confirmPrompt}
+              className="rounded-lg bg-accent px-3 py-2 text-xs font-semibold text-bg transition hover:opacity-90"
+            >
+              Insertar
+            </button>
+            <button
+              type="button"
+              onClick={closePrompt}
+              className="rounded-lg border border-border px-3 py-2 text-xs font-medium text-muted transition hover:text-text"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+
       <textarea
         ref={ref}
         value={value}
