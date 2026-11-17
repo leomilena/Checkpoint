@@ -61,6 +61,12 @@ export function RichTextarea({ value, onChange }: { value: string; onChange: (ne
     insertAtCursor(`[youtube](${url})`);
   }
 
+  function onInsertTweet() {
+    const url = window.prompt("Pega el enlace de la publicación de X:", "")?.trim();
+    if (!url) return;
+    insertAtCursor(`[x](${url})`);
+  }
+
   async function onPickImage(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     e.target.value = "";
@@ -126,6 +132,15 @@ export function RichTextarea({ value, onChange }: { value: string; onChange: (ne
           className={buttonClass}
         >
           ▶
+        </button>
+        <button
+          type="button"
+          aria-label="Insertar publicación de X"
+          title="Insertar publicación de X"
+          onClick={onInsertTweet}
+          className={buttonClass}
+        >
+          𝕏
         </button>
       </div>
       <textarea

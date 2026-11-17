@@ -16,6 +16,13 @@ export function extractYouTubeId(url: string): string | null {
   return null;
 }
 
+const TWEET_ID_PATTERN = /(?:twitter\.com|x\.com)\/[A-Za-z0-9_]+\/status(?:es)?\/(\d+)/;
+
+export function extractTweetId(url: string): string | null {
+  const match = TWEET_ID_PATTERN.exec(url);
+  return match ? match[1] : null;
+}
+
 function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
   const nodes: React.ReactNode[] = [];
   const regex = /(\*\*(.+?)\*\*|\*(.+?)\*)/g;
@@ -71,6 +78,8 @@ export function renderArticleBody(body: string): React.ReactNode {
     const imageMatch = /^!\[([^\]]*)\]\((\S+)\)$/.exec(line);
     const youtubeMatch = /^\[youtube\]\((\S+)\)$/.exec(line);
     const youtubeId = youtubeMatch ? extractYouTubeId(youtubeMatch[1]) : null;
+    const tweetMatch = /^\[x\]\((\S+)\)$/.exec(line);
+    const tweetId = tweetMatch ? extractTweetId(tweetMatch[1]) : null;
 
     if (line.startsWith("## ")) {
       flushParagraph(key);
@@ -104,6 +113,20 @@ export function renderArticleBody(body: string): React.ReactNode {
             className="absolute inset-0 h-full w-full"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
+            loading="lazy"
+          />
+        </div>
+      );
+    } else if (tweetId) {
+      flushParagraph(key);
+      flushQuote(key);
+      blocks.push(
+        <div key={key} className="relative my-5 w-full overflow-hidden rounded-card">
+          <iframe
+            src={`https://platform.twitter.com/embed/Tweet.html?id=${tweetId}&theme=dark&dnt=true`}
+            title="Publicación de X incrustada"
+            className="h-[480px] w-full"
+            frameBorder="0"
             loading="lazy"
           />
         </div>
