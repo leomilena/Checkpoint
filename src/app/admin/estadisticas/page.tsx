@@ -11,6 +11,8 @@ type Stats = {
 
 export default function StatsPage() {
   const [stats, setStats] = useState<Stats | null>(null);
+  const [resubmitting, setResubmitting] = useState(false);
+  const [resubmitResult, setResubmitResult] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/admin/stats")
@@ -18,10 +20,40 @@ export default function StatsPage() {
       .then(setStats);
   }, []);
 
+  async function resubmitToIndexNow() {
+    setResubmitting(true);
+    setResubmitResult(null);
+    const res = await fetch("/api/admin/indexnow-resubmit", { method: "POST" });
+    const data = await res.json().catch(() => ({}));
+    setResubmitResult(
+      res.ok ? `Enviadas ${data.sent} URLs a IndexNow (Bing, Yandex...).` : (data.error ?? "No se ha podido enviar")
+    );
+    setResubmitting(false);
+  }
+
   if (!stats) return <p className="text-muted">Cargando…</p>;
 
   return (
     <div className="flex flex-col gap-8">
+      <div className="flex flex-wrap items-center gap-3 rounded-card border border-border bg-surface p-4">
+        <div className="flex-1">
+          <p className="text-sm font-semibold text-text">Reenviar todo a IndexNow</p>
+          <p className="text-xs text-muted">
+            Avisa a Bing, Yandex y otros buscadores compatibles con IndexNow de todos los artículos
+            publicados de golpe (Google no usa este protocolo).
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={resubmitToIndexNow}
+          disabled={resubmitting}
+          className="rounded-full border border-border px-4 py-2 text-sm font-medium text-text transition hover:border-accent hover:text-accent disabled:opacity-60"
+        >
+          {resubmitting ? "Enviando…" : "Reenviar ahora"}
+        </button>
+        {resubmitResult && <p className="w-full text-xs text-muted">{resubmitResult}</p>}
+      </div>
+
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {[
           { label: "Publicados", value: stats.totals.publishedCount },
