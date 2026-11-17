@@ -14,6 +14,7 @@ import { RatingWidget } from "@/components/article/rating-widget";
 import { TextSizeControl } from "@/components/article/text-size-control";
 import { CommentsSection } from "@/components/article/comments-section";
 import { ArticleCard } from "@/components/article-card";
+import { SidebarArticleList } from "@/components/article/sidebar-article-list";
 import { articleCardSelect } from "@/lib/article-select";
 
 function formatDate(date: Date | null) {
@@ -86,7 +87,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     prisma.article.findMany({
       where: { status: "PUBLISHED", id: { not: article.id } },
       orderBy: { views: "desc" },
-      take: 4,
+      take: 6,
       select: articleCardSelect,
     }),
   ]);
@@ -101,8 +102,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   const isDraftPreview = article.status !== "PUBLISHED";
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
+    <div className="mx-auto max-w-6xl px-4 py-8">
       <MarkRead slug={article.slug} articleId={article.id} />
+
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start lg:gap-10">
+      <div className="mx-auto w-full max-w-3xl lg:mx-0">
 
       {isDraftPreview && (
         <div className="mb-6 rounded-card border border-accent/40 bg-accent/10 px-4 py-2 text-sm text-accent">
@@ -199,16 +203,12 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         </section>
       )}
 
-      {mostRead.length > 0 && (
-        <section className="mt-14">
-          <h2 className="mb-4 font-display text-xl font-bold text-text">Más leídos de The Frame</h2>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {mostRead.map((r) => (
-              <ArticleCard key={r.id} article={r} />
-            ))}
-          </div>
-        </section>
-      )}
+      </div>
+
+      <aside className="mx-auto mt-10 w-full max-w-3xl lg:sticky lg:top-24 lg:mx-0 lg:mt-0">
+        <SidebarArticleList title="Más leídos de The Frame" articles={mostRead} />
+      </aside>
+      </div>
     </div>
   );
 }
