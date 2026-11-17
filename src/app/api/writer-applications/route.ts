@@ -19,13 +19,34 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "¡Solicitud enviada!" });
   }
 
-  await prisma.writerApplication.create({
-    data: {
-      name: parsed.data.name.trim(),
-      email: parsed.data.email.toLowerCase().trim(),
-      message: parsed.data.message.trim(),
-    },
-  });
+  const name = parsed.data.name.trim();
+  const email = parsed.data.email.toLowerCase().trim();
+
+  try {
+    await prisma.writerApplication.create({
+      data: { name, email, message: parsed.data.message.trim() },
+    });
+  } catch (error) {
+    console.error("Error al guardar la solicitud de redactor:", error);
+    return NextResponse.json({ error: "No se ha podido enviar la solicitud" }, { status: 500 });
+  }
+
+  // La solicitud ya está guardada; si fallase el aviso a los admins no debe
+  // impedir confirmar al solicitante que se ha enviado correctamente.
+  try {
+    const admins = await prisma.user.findMany({ where: { role: "ADMIN" }, select: { id: true } });
+    if (admins.length > 0) {
+      await prisma.notification.createMany({
+        data: admins.map((admin) => ({
+          userId: admin.id,
+          type: "WRITER_APPLICATION" as const,
+          message: `Nueva solicitud para escribir: ${name} (${email})`,
+        })),
+      });
+    }
+  } catch (error) {
+    console.error("Error al notificar la solicitud de redactor a los admins:", error);
+  }
 
   return NextResponse.json({ message: "¡Solicitud enviada!" });
 }

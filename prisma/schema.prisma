@@ -46,6 +46,7 @@ enum NotificationType {
   ARTICLE_RETURNED
   ARTICLE_APPROVED
   NEW_ARTICLE
+  WRITER_APPLICATION
 }
 
 model User {

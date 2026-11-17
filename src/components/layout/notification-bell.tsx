@@ -5,11 +5,18 @@ import Link from "next/link";
 
 type Notification = {
   id: string;
+  type: string;
   message: string;
   read: boolean;
   createdAt: string;
   article: { slug: string; title: string } | null;
 };
+
+function notificationHref(n: Notification): string {
+  if (n.article) return `/articulo/${n.article.slug}`;
+  if (n.type === "WRITER_APPLICATION") return "/admin/redactores";
+  return "#";
+}
 
 export function NotificationBell() {
   const [open, setOpen] = useState(false);
@@ -86,7 +93,7 @@ export function NotificationBell() {
               {notifications.map((n) => (
                 <li key={n.id} className="border-b border-border last:border-0">
                   <Link
-                    href={n.article ? `/articulo/${n.article.slug}` : "#"}
+                    href={notificationHref(n)}
                     onClick={() => setOpen(false)}
                     className={`block px-4 py-3 text-sm transition hover:bg-surface2 ${
                       n.read ? "text-muted" : "text-text"
