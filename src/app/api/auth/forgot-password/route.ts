@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { forgotPasswordSchema } from "@/lib/validation";
 import { sendPasswordResetEmail } from "@/lib/email";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { getBaseUrl } from "@/lib/site-url";
 
 export async function POST(req: Request) {
   if (!rateLimit(`forgot-password:${getClientIp(req)}`, 5, 10 * 60 * 1000)) {
@@ -28,7 +29,7 @@ export async function POST(req: Request) {
       data: { token, userId: user.id, expiresAt },
     });
 
-    const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+    const baseUrl = getBaseUrl();
     const resetUrl = `${baseUrl}/restablecer-contrasena?token=${token}`;
     await sendPasswordResetEmail(user.email, resetUrl);
   }

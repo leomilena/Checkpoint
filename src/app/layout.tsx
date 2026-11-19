@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/header";
 import { CategoryBar } from "@/components/layout/category-bar";
 import { Footer } from "@/components/layout/footer";
 import { prisma } from "@/lib/prisma";
+import { getBaseUrl } from "@/lib/site-url";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -34,7 +35,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXTAUTH_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(getBaseUrl()),
   title: {
     default: "The Frame — videojuegos, cine y frikada",
     template: "%s · The Frame",

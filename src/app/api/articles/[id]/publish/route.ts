@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 import { isAdmin } from "@/lib/permissions";
 import { notifyIndexNow } from "@/lib/indexnow";
+import { getBaseUrl } from "@/lib/site-url";
 
 export async function POST(_req: Request, { params }: { params: { id: string } }) {
   const user = await getCurrentUser();
@@ -62,7 +63,7 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
   // Esperamos el aviso (en vez de lanzarlo "en segundo plano") porque en
   // el runtime serverless de Vercel una promesa sin await puede quedar
   // cortada en cuanto se devuelve la respuesta.
-  const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+  const baseUrl = getBaseUrl();
   await notifyIndexNow(`${baseUrl}/articulo/${article.slug}`);
 
   return NextResponse.json({ article: updated });

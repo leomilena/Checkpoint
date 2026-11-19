@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { getBaseUrl } from "@/lib/site-url";
 
 // Igual que el sitemap: se calcula por petición, no en build time.
 export const dynamic = "force-dynamic";
@@ -13,7 +14,7 @@ function escapeXml(value: string) {
 }
 
 export async function GET() {
-  const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+  const baseUrl = getBaseUrl();
 
   const articles = await prisma.article.findMany({
     where: { status: "PUBLISHED" },
