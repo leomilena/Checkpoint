@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { NewsletterForm } from "@/components/layout/newsletter-form";
+import { KofiButton } from "@/components/kofi-button";
 
 export function Footer() {
   return (
@@ -35,6 +36,7 @@ export function Footer() {
               </svg>
             </a>
           </div>
+          <KofiButton className="mt-3" />
         </div>
         <div>
           <p className="mb-2 text-sm font-semibold text-text">Suscríbete al boletín</p>

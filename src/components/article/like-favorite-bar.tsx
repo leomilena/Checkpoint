@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { KofiButton } from "@/components/kofi-button";
 
 export function LikeFavoriteBar({
   articleId,
@@ -142,6 +143,8 @@ export function LikeFavoriteBar({
           </div>
         )}
       </div>
+
+      <KofiButton className="ml-auto" />
     </div>
   );
 }
