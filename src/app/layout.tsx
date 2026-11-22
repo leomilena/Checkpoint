@@ -5,6 +5,7 @@ import { Providers } from "@/components/providers";
 import { Header } from "@/components/layout/header";
 import { CategoryBar } from "@/components/layout/category-bar";
 import { Footer } from "@/components/layout/footer";
+import { WelcomeModal } from "@/components/welcome-modal";
 import { prisma } from "@/lib/prisma";
 import { getBaseUrl } from "@/lib/site-url";
 
@@ -64,6 +65,7 @@ export default async function RootLayout({
           Saltar al contenido
         </a>
         <Providers>
+          <WelcomeModal />
           <Header />
           <CategoryBar topics={topics} categories={categories} />
           <main id="main-content">{children}</main>
