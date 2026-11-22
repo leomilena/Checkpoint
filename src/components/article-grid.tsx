@@ -85,9 +85,9 @@ export function ArticleGrid({
                 <FeaturedArticleCard article={articles[0]} />
               </div>
               {articles.length > 1 && (
-                <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-8">
                   {articles.slice(1, 3).map((article) => (
-                    <ArticleCard key={article.id} article={article} />
+                    <ArticleCard key={article.id} article={article} className="flex-1" />
                   ))}
                 </div>
               )}
