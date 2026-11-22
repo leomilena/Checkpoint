@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { ArticleCard } from "@/components/article-card";
 import { FeaturedArticleCard } from "@/components/featured-article-card";
+import { ReleaseWidget } from "@/components/home/release-widget";
 import type { ArticleCard as ArticleCardType } from "@/lib/article-select";
+import type { ReleaseItem } from "@/lib/external-media";
 import type { SortKey } from "@/lib/article-query";
 
 const SORT_OPTIONS: { key: SortKey; label: string }[] = [
@@ -18,12 +20,17 @@ export function ArticleGrid({
   initialHasMore,
   topicSlug,
   categorySlug,
+  gameReleases = [],
+  movieReleases = [],
 }: {
   initialArticles: ArticleCardType[];
   initialHasMore: boolean;
   topicSlug?: string;
   categorySlug?: string;
+  gameReleases?: ReleaseItem[];
+  movieReleases?: ReleaseItem[];
 }) {
+  const isHome = !topicSlug && !categorySlug;
   const [sort, setSort] = useState<SortKey>("recent");
   const [articles, setArticles] = useState(initialArticles);
   const [hasMore, setHasMore] = useState(initialHasMore);
@@ -73,20 +80,53 @@ export function ArticleGrid({
       ) : (
         <div className="flex flex-col gap-5">
           {articles.length > 0 && (
-            <FeaturedArticleCard article={articles[0]} />
-          )}
-
-          {articles.length > 1 && (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              {articles.slice(1, 5).map((article) => (
-                <ArticleCard key={article.id} article={article} />
-              ))}
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+              <div className="lg:col-span-2">
+                <FeaturedArticleCard article={articles[0]} />
+              </div>
+              {articles.length > 1 && (
+                <div className="flex flex-col gap-5">
+                  {articles.slice(1, 3).map((article) => (
+                    <ArticleCard key={article.id} article={article} />
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
-          {articles.length > 5 && (
+          {!isHome ? null : (
+            <>
+              {(articles.length > 3 || gameReleases.length > 0) && (
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {articles.slice(3, 5).map((article) => (
+                    <ArticleCard key={article.id} article={article} />
+                  ))}
+                  <ReleaseWidget
+                    title="Últimos lanzamientos de videojuegos"
+                    items={gameReleases}
+                    attribution="Datos de videojuegos vía RAWG.io"
+                  />
+                </div>
+              )}
+
+              {(articles.length > 5 || movieReleases.length > 0) && (
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {articles.slice(5, 7).map((article) => (
+                    <ArticleCard key={article.id} article={article} />
+                  ))}
+                  <ReleaseWidget
+                    title="Últimas pelis en cartelera"
+                    items={movieReleases}
+                    attribution="Este producto usa la API de TMDB pero no está certificado ni respaldado por TMDB."
+                  />
+                </div>
+              )}
+            </>
+          )}
+
+          {articles.length > (isHome ? 7 : 5) && (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {articles.slice(5).map((article) => (
+              {articles.slice(isHome ? 7 : 5).map((article) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
             </div>
