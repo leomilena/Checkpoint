@@ -94,39 +94,24 @@ export function ArticleGrid({
             </div>
           )}
 
-          {!isHome ? null : (
-            <>
-              {(articles.length > 3 || gameReleases.length > 0) && (
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {articles.slice(3, 5).map((article) => (
-                    <ArticleCard key={article.id} article={article} />
-                  ))}
-                  <ReleaseWidget
-                    title="Últimos lanzamientos de videojuegos"
-                    items={gameReleases}
-                    attribution="Datos de videojuegos vía RAWG.io"
-                  />
-                </div>
-              )}
-
-              {(articles.length > 5 || movieReleases.length > 0) && (
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {articles.slice(5, 7).map((article) => (
-                    <ArticleCard key={article.id} article={article} />
-                  ))}
-                  <ReleaseWidget
-                    title="Últimas pelis en cartelera"
-                    items={movieReleases}
-                    attribution="Este producto usa la API de TMDB pero no está certificado ni respaldado por TMDB."
-                  />
-                </div>
-              )}
-            </>
+          {isHome && (gameReleases.length > 0 || movieReleases.length > 0) && (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <ReleaseWidget
+                title="Últimos lanzamientos de videojuegos"
+                items={gameReleases}
+                attribution="Datos de videojuegos vía RAWG.io"
+              />
+              <ReleaseWidget
+                title="Últimas pelis en cartelera"
+                items={movieReleases}
+                attribution="Este producto usa la API de TMDB pero no está certificado ni respaldado por TMDB."
+              />
+            </div>
           )}
 
-          {articles.length > (isHome ? 7 : 5) && (
+          {articles.length > 3 && (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {articles.slice(isHome ? 7 : 5).map((article) => (
+              {articles.slice(3).map((article) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
             </div>
