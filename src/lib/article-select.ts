@@ -4,6 +4,7 @@ export const articleCardSelect = {
   id: true,
   title: true,
   subtitle: true,
+  body: true,
   slug: true,
   coverImageUrl: true,
   coverGradient: true,

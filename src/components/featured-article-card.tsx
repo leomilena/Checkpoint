@@ -4,6 +4,7 @@ import { Avatar } from "@/components/avatar";
 import { StarRatingDisplay } from "@/components/star-rating";
 import { ReadBadge } from "@/components/read-badge";
 import { articleSupportsRating } from "@/lib/rating";
+import { excerptFromBody } from "@/lib/excerpt";
 import type { ArticleCard as ArticleCardType } from "@/lib/article-select";
 
 function formatDate(date: Date | string | null) {
@@ -48,6 +49,8 @@ export function FeaturedArticleCard({ article }: { article: ArticleCardType }) {
         </Link>
 
         {article.subtitle && <p className="max-w-2xl text-base text-muted">{article.subtitle}</p>}
+
+        <p className="max-w-2xl text-sm text-muted">{excerptFromBody(article.body)}</p>
 
         {showRating && (
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-sm text-muted">
