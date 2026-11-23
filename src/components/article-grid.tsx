@@ -78,7 +78,7 @@ export function ArticleGrid({
       {articles.length === 0 ? (
         <p className="py-16 text-center text-muted">No hay artículos todavía.</p>
       ) : (
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-10">
           {articles.length > 0 && (
             <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
               <div className="lg:col-span-2">
