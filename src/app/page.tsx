@@ -4,7 +4,10 @@ import { getNowPlayingMovies, getLatestGameReleases } from "@/lib/external-media
 
 export default async function HomePage() {
   const [{ articles, hasMore }, gameReleases, movieReleases] = await Promise.all([
-    listPublishedArticles({ sort: "recent", page: 0, pageSize: 10 }),
+    // 3 para la fila del destacado + un múltiplo de 3 para que la rejilla de
+    // abajo siempre acabe en una fila completa, sin dejar una tarjeta suelta
+    // mientras todavía quede más contenido por cargar con "Cargar más".
+    listPublishedArticles({ sort: "recent", page: 0, pageSize: 9 }),
     getLatestGameReleases(),
     getNowPlayingMovies(),
   ]);
