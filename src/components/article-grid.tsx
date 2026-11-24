@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { ArticleCard } from "@/components/article-card";
 import { FeaturedArticleCard } from "@/components/featured-article-card";
+import { ReleaseWidget } from "@/components/home/release-widget";
 import type { ArticleCard as ArticleCardType } from "@/lib/article-select";
+import type { ReleaseItem } from "@/lib/external-media";
 import type { SortKey } from "@/lib/article-query";
 
 const SORT_OPTIONS: { key: SortKey; label: string }[] = [
@@ -18,12 +20,15 @@ export function ArticleGrid({
   initialHasMore,
   topicSlug,
   categorySlug,
+  gameReleases = [],
 }: {
   initialArticles: ArticleCardType[];
   initialHasMore: boolean;
   topicSlug?: string;
   categorySlug?: string;
+  gameReleases?: ReleaseItem[];
 }) {
+  const isHome = !topicSlug && !categorySlug;
   const [sort, setSort] = useState<SortKey>("recent");
   const [articles, setArticles] = useState(initialArticles);
   const [hasMore, setHasMore] = useState(initialHasMore);
@@ -71,22 +76,35 @@ export function ArticleGrid({
       {articles.length === 0 ? (
         <p className="py-16 text-center text-muted">No hay artículos todavía.</p>
       ) : (
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-10">
           {articles.length > 0 && (
-            <FeaturedArticleCard article={articles[0]} />
-          )}
-
-          {articles.length > 1 && (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              {articles.slice(1, 5).map((article) => (
-                <ArticleCard key={article.id} article={article} />
-              ))}
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+              <div className="lg:col-span-2">
+                <FeaturedArticleCard article={articles[0]} />
+              </div>
+              {articles.length > 1 && (
+                <div className="flex flex-col gap-8">
+                  {articles.slice(1, 3).map((article) => (
+                    <ArticleCard key={article.id} article={article} className="flex-1" />
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
-          {articles.length > 5 && (
+          {isHome && gameReleases.length > 0 && (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {articles.slice(5).map((article) => (
+              <ReleaseWidget
+                title="Últimos lanzamientos de videojuegos"
+                items={gameReleases}
+                attribution="Datos de videojuegos vía RAWG.io"
+              />
+            </div>
+          )}
+
+          {articles.length > 3 && (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {articles.slice(3).map((article) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
             </div>

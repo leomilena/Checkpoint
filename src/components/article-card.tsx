@@ -11,14 +11,16 @@ function formatDate(date: Date | string | null) {
   return new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "short" }).format(new Date(date));
 }
 
-export function ArticleCard({ article }: { article: ArticleCardType }) {
+export function ArticleCard({ article, className = "" }: { article: ArticleCardType; className?: string }) {
   const showRating = articleSupportsRating(article.category, article.topic);
   const coauthors = article.coauthors.map((c) => c.user);
   const authorLabel =
     coauthors.length > 0 ? `${article.author.name} y ${coauthors[0].name}` : article.author.name;
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-card border border-border bg-surface transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_-8px_var(--cp-accent)]">
+    <article
+      className={`group relative flex flex-col overflow-hidden rounded-card border border-border bg-surface transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_-8px_var(--cp-accent)] ${className}`}
+    >
       <Link href={`/articulo/${article.slug}`} className="relative block aspect-[16/9]">
         <ReadBadge slug={article.slug} />
         <CoverImage

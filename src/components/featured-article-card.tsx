@@ -4,6 +4,7 @@ import { Avatar } from "@/components/avatar";
 import { StarRatingDisplay } from "@/components/star-rating";
 import { ReadBadge } from "@/components/read-badge";
 import { articleSupportsRating } from "@/lib/rating";
+import { excerptFromBody } from "@/lib/excerpt";
 import type { ArticleCard as ArticleCardType } from "@/lib/article-select";
 
 function formatDate(date: Date | string | null) {
@@ -18,8 +19,8 @@ export function FeaturedArticleCard({ article }: { article: ArticleCardType }) {
     coauthors.length > 0 ? `${article.author.name} y ${coauthors[0].name}` : article.author.name;
 
   return (
-    <article className="group relative overflow-hidden rounded-card border border-border bg-surface transition duration-200 hover:shadow-[0_12px_40px_-10px_var(--cp-accent)]">
-      <Link href={`/articulo/${article.slug}`} className="relative block aspect-[16/9] sm:aspect-[21/9]">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-card border border-border bg-surface transition duration-200 hover:shadow-[0_12px_40px_-10px_var(--cp-accent)]">
+      <Link href={`/articulo/${article.slug}`} className="relative block aspect-[16/9] shrink-0 sm:aspect-[21/9]">
         <ReadBadge slug={article.slug} />
         <CoverImage
           src={article.coverImageUrl}
@@ -30,7 +31,7 @@ export function FeaturedArticleCard({ article }: { article: ArticleCardType }) {
         />
       </Link>
 
-      <div className="flex flex-col gap-3 p-5 sm:p-7">
+      <div className="flex flex-1 flex-col gap-3 p-5 sm:p-7">
         <div className="flex items-center gap-2">
           <span
             className="rounded-full px-2.5 py-1 font-mono text-[11px] font-semibold uppercase tracking-wide"
@@ -49,6 +50,8 @@ export function FeaturedArticleCard({ article }: { article: ArticleCardType }) {
 
         {article.subtitle && <p className="max-w-2xl text-base text-muted">{article.subtitle}</p>}
 
+        <p className="max-w-2xl text-sm text-muted">{excerptFromBody(article.body)}</p>
+
         {showRating && (
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-sm text-muted">
             {article.writerRating != null && (
@@ -65,7 +68,7 @@ export function FeaturedArticleCard({ article }: { article: ArticleCardType }) {
           </div>
         )}
 
-        <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
           <div className="flex items-center gap-2">
             <Avatar name={article.author.name} color={article.author.avatarColor} imageUrl={article.author.avatarImageUrl} size={30} />
             <span className="text-sm text-muted">{authorLabel}</span>
