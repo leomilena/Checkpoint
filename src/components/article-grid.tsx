@@ -21,14 +21,12 @@ export function ArticleGrid({
   topicSlug,
   categorySlug,
   gameReleases = [],
-  movieReleases = [],
 }: {
   initialArticles: ArticleCardType[];
   initialHasMore: boolean;
   topicSlug?: string;
   categorySlug?: string;
   gameReleases?: ReleaseItem[];
-  movieReleases?: ReleaseItem[];
 }) {
   const isHome = !topicSlug && !categorySlug;
   const [sort, setSort] = useState<SortKey>("recent");
@@ -94,17 +92,12 @@ export function ArticleGrid({
             </div>
           )}
 
-          {isHome && (gameReleases.length > 0 || movieReleases.length > 0) && (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          {isHome && gameReleases.length > 0 && (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               <ReleaseWidget
                 title="Últimos lanzamientos de videojuegos"
                 items={gameReleases}
                 attribution="Datos de videojuegos vía RAWG.io"
-              />
-              <ReleaseWidget
-                title="Últimas pelis en cartelera"
-                items={movieReleases}
-                attribution="Este producto usa la API de TMDB pero no está certificado ni respaldado por TMDB."
               />
             </div>
           )}
