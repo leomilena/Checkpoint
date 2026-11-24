@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArticleCard } from "@/components/article-card";
 import { FeaturedArticleCard } from "@/components/featured-article-card";
 import { ReleaseWidget } from "@/components/home/release-widget";
+import { SidebarArticleList } from "@/components/article/sidebar-article-list";
 import type { ArticleCard as ArticleCardType } from "@/lib/article-select";
 import type { ReleaseItem } from "@/lib/external-media";
 import type { SortKey } from "@/lib/article-query";
@@ -21,12 +22,14 @@ export function ArticleGrid({
   topicSlug,
   categorySlug,
   gameReleases = [],
+  mostRead = [],
 }: {
   initialArticles: ArticleCardType[];
   initialHasMore: boolean;
   topicSlug?: string;
   categorySlug?: string;
   gameReleases?: ReleaseItem[];
+  mostRead?: ArticleCardType[];
 }) {
   const isHome = !topicSlug && !categorySlug;
   const [sort, setSort] = useState<SortKey>("recent");
@@ -92,13 +95,14 @@ export function ArticleGrid({
             </div>
           )}
 
-          {isHome && gameReleases.length > 0 && (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {isHome && (gameReleases.length > 0 || mostRead.length > 0) && (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <ReleaseWidget
                 title="Últimos lanzamientos de videojuegos"
                 items={gameReleases}
                 attribution="Datos de videojuegos vía RAWG.io"
               />
+              <SidebarArticleList title="Más leídos de The Frame" articles={mostRead} />
             </div>
           )}
 
