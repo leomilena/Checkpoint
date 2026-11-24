@@ -20,7 +20,7 @@ export function FeaturedArticleCard({ article }: { article: ArticleCardType }) {
 
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-card border border-border bg-surface transition duration-200 hover:shadow-[0_12px_40px_-10px_var(--cp-accent)]">
-      <Link href={`/articulo/${article.slug}`} className="relative block aspect-[16/9] shrink-0 sm:aspect-[21/9]">
+      <Link href={`/articulo/${article.slug}`} className="relative block aspect-[16/9] shrink-0">
         <ReadBadge slug={article.slug} />
         <CoverImage
           src={article.coverImageUrl}
